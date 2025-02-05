@@ -233,35 +233,132 @@ public class HeadnTail {
         return true;
     }
 
+    public static boolean isCycle() { // floyd's cycle
+        Node slow = head;
+        Node fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next; // +1
+            fast = fast.next.next; // +2
+            if (slow == fast) {
+                return true; // cycle exists
+            }
+        }
+        return false;// cycle doesn't exist
+    }
+
+    public static void removeCycle() {
+        // detect cycle
+        Node slow = head;
+        Node fast = head;
+        boolean cycle = false;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (fast == slow) {
+                cycle = true;
+                break;
+            }
+        }
+        if (cycle == false) {
+            return;
+        }
+
+        // find meeting point
+        slow = head;
+        Node prev = null;
+        while (slow != fast) {
+            prev = fast;
+            slow = slow.next;
+            fast = fast.next;
+        }
+        // remove cycle-> lastt.next = null
+        prev.next = null;
+    }
+
+    public void zigZag() {
+        // find mid
+        Node slow = head;
+        Node fast = head.next;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        Node mid = slow;
+
+        // reverse 2nd half
+        Node curr = mid.next;
+        mid.next = null;
+        Node prev = null;
+        Node next;
+
+        while ((curr != null)) {
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+
+        Node left = head;
+        Node right = prev;
+        Node nextL, nextR;
+
+        // alt merge - zig zag merge
+        while (left != null && right != null) {
+            nextL = left.next;
+            left.next = right;
+            nextR = right.next;
+            right.next = nextL;
+
+            left = nextL;
+            right = nextR;
+        }
+    }
+
     public static void main(String args[]) {
         HeadnTail ht = new HeadnTail();
         ht.addLast(1);
         ht.addLast(2);
-        ht.addLast(2);
-        ht.addLast(1);
+        ht.addLast(3);
+        ht.addLast(4);
+        ht.addLast(5);
         ht.print();
-        System.out.println(ht.checkPalindrome());
-
-        // ht.add(2, 3);
-
-        // ht.print();
-        // System.out.println(ht.size);
-        // ht.removeFirst();
-        // ht.print();
-
-        // ht.removeLast();
-        // ht.print();
-        // System.out.println(ht.size);
-        // System.out.println(ht.recSearch(3));
-        // System.out.println(ht.recSearch(10));
-
-        // ht.print();
-        // ht.revesre();
-        // ht.print();
-
-        // ht.print();
-        // ht.deleteNthFromEnd(3);
-        // ht.print();
+        ht.zigZag();
+        ht.print();
     }
+
+    // public static void main(String[] args) {
+    // head = new Node(1);
+    // Node temp = new Node(2);
+    // head.next = temp;
+    // head.next.next = new Node(3);
+    // head.next.next.next = temp;
+    // // 1-2-3-1
+    // System.out.println(isCycle());
+    // removeCycle();
+    // System.out.println(isCycle());
+    // }
+
+    // // ht.add(2, 3);
+
+    // ht.print();
+    // System.out.println(ht.size);
+    // ht.removeFirst();
+    // ht.print();
+
+    // ht.removeLast();
+    // ht.print();
+    // System.out.println(ht.size);
+    // System.out.println(ht.recSearch(3));
+    // System.out.println(ht.recSearch(10));
+
+    // ht.print();
+    // ht.revesre();
+    // ht.print();
+
+    // ht.print();
+    // ht.deleteNthFromEnd(3);
+    // ht.print();
+    // }
 
 }
